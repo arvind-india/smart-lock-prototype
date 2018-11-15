@@ -2,7 +2,7 @@
  * Model definitions
  */
 
-namespace xyz.qn0x
+namespace de.hftl
 
 
 /**
@@ -11,13 +11,25 @@ namespace xyz.qn0x
  **************************************************************************
  */
 participant User identified by userId {
-  o String userId
-  o String firstName
-  o String lastName
+    o String userId
+    o String firstName
+    o String lastName
 }
 
 participant Lock identified by lockId {
-  o String lockId
+    o String lockId
+    o String name
+    o DateTime lastUnlocked
+}
+
+enmum UserRole {
+  o USER
+  o ADMIN
+}
+
+enum LockState {
+  o UNLOCKED
+  o LOCKED
 }
 
 /**
@@ -25,10 +37,13 @@ participant Lock identified by lockId {
  * Assets
  **************************************************************************
  */
-asset Key identified by keyId {
-  o String keyId
-  --> User owner
-  o String value
+asset LockKey identified by keyId {
+    o String keyId
+    o DateTime expirationDate
+    o DateTime lastUsed
+    --> Lock lockId
+    --> User owner
+    --> User issuer
 }
 
 /**
@@ -36,9 +51,33 @@ asset Key identified by keyId {
  * Transactions
  **************************************************************************
  */
-transaction OpenDoor {
-  --> Key asset
-  o String newValue
+transaction Unlock {
+    --> LockKey lockKey
+    --> Lock lock
+}
+
+transaction GrantUnlock {
+    --> LockKey lockKey
+    --> Lock lock
+    --> User issuer
+    --> User grantee
+}
+
+transaction RevokeUnlock {
+    --> LockKey lockKey
+    --> Lock lock
+    --> User issuer
+    --> User revokee
+}
+
+transaction GrantAdmin {
+    --> User issuer
+    --> User grantee
+}
+
+transaction RevokeAdmin {
+    --> User issuer
+    --> User revokee
 }
 
 /**
