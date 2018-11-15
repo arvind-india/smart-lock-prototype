@@ -1,28 +1,26 @@
-/**
- * Model definitions
- */
-
+/*********************
+ * Model definitions *
+ *********************/
 namespace de.hftl
 
-
 /**
- **************************************************************************
  * Participants
- **************************************************************************
  */
 participant User identified by userId {
     o String userId
     o String firstName
     o String lastName
+	o UserRole role
 }
 
 participant Lock identified by lockId {
     o String lockId
     o String name
     o DateTime lastUnlocked
+	o LockState state
 }
 
-enmum UserRole {
+enum UserRole {
   o USER
   o ADMIN
 }
@@ -33,9 +31,7 @@ enum LockState {
 }
 
 /**
- **************************************************************************
  * Assets
- **************************************************************************
  */
 asset LockKey identified by keyId {
     o String keyId
@@ -47,25 +43,33 @@ asset LockKey identified by keyId {
 }
 
 /**
- **************************************************************************
  * Transactions
- **************************************************************************
  */
+
+//Actions
 transaction Unlock {
     --> LockKey lockKey
     --> Lock lock
 }
 
+transaction addUser {
+}
+
+transaction removeUser {
+  	--> User userToRemove
+}
+
+//Permissions
 transaction GrantUnlock {
-    --> LockKey lockKey
-    --> Lock lock
+    --> LockKey lockKey //Key asset
+    --> Lock lock //Lock on which the key can be used
     --> User issuer
     --> User grantee
 }
 
 transaction RevokeUnlock {
-    --> LockKey lockKey
-    --> Lock lock
+    --> LockKey lockKey //Key asset
+    --> Lock lock //Lock on which the key can be used
     --> User issuer
     --> User revokee
 }
@@ -81,12 +85,10 @@ transaction RevokeAdmin {
 }
 
 /**
- **************************************************************************
  * Events
- **************************************************************************
  */
 event SampleEvent {
-  --> Key asset
+  --> LockKey asset
   o String oldValue
   o String newValue
 }
