@@ -20,7 +20,7 @@ asset LockKey identified by keyId {
     o String keyId
     o DateTime expirationDate
     o DateTime[] useLog
-    --> Lock lockId
+    --> Lock lock
     --> User owner
     --> User issuer
 }
