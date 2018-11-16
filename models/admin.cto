@@ -1,0 +1,9 @@
+namespace de.hftl.admin
+import de.hftl.user.*
+
+transaction addUser {
+}
+
+transaction removeUser {
+  	--> User userToRemove
+}

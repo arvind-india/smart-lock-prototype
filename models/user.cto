@@ -1,0 +1,27 @@
+namespace de.hftl.user
+
+participant User identified by userId {
+    o String userId
+    o String firstName
+    o String lastName
+	o UserRole role
+}
+
+enum UserRole {
+  o GUEST
+  o OWNER
+}
+
+asset AdminToken identified by adminId {
+	o String adminId
+	o DateTime granted
+	o DateTime revoked
+	o AdminTokenState state
+	--> User issuer
+    --> User grantee
+}
+
+enum AdminTokenState {
+	o VALID
+	o INVALID
+}

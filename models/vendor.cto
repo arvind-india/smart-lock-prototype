@@ -1,0 +1,15 @@
+namespace de.hftl.vendor
+
+participant Vendor identified by vendorServerId {
+	o String vendorServerId
+	o DateTime lastUpdate
+	o Version version
+}
+
+concept Version {
+	o String version
+}
+
+transaction UpdateFirmware {}
+transaction UpdateNetwork {}
+transaction ResetLock {}

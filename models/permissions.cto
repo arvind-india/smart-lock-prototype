@@ -1,0 +1,27 @@
+namespace de.hftl.permissions
+import de.hftl.lock.*
+import de.hftl.user.*
+
+transaction GrantUnlock {
+    --> LockKey lockKey //Key asset
+    --> Lock lock //Lock on which the key can be used
+    --> User issuer
+    --> User grantee
+}
+
+transaction RevokeUnlock {
+    --> LockKey lockKey //Key asset
+    --> Lock lock //Lock on which the key can be used
+    --> User issuer
+    --> User revokee
+}
+
+transaction GrantAdmin {
+    --> User issuer
+    --> User grantee
+}
+
+transaction RevokeAdmin {
+    --> User issuer
+    --> User revokee
+}
