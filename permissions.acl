@@ -1,4 +1,3 @@
-
 /*rule SystemACL {
     description:  "System ACL to permit all access"
     participant: "org.hyperledger.composer.system.Participant"
@@ -9,7 +8,7 @@
 
 
 // admin stuff
-/*rule NetworkAdminUser {
+rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
     operation: ALL
@@ -23,7 +22,7 @@ rule NetworkAdminSystem {
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
-}*/
+}
 
 
 
