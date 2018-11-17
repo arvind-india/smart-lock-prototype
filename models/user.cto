@@ -16,22 +16,3 @@ enum UserRole {
   o GUEST
   o OWNER
 }
-
-asset AdminToken identified by adminId {
-	o String adminId
-	o DateTime granted
-	o DateTime revoked
-	o AdminTokenState state
-	--> User issuer
-    --> User grantee
-}
-
-enum AdminTokenState {
-	o VALID
-	o INVALID
-}
-
-transaction registerLock {
-    --> Lock lock
-    --> Vendor vendor
-}

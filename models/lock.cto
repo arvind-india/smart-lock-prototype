@@ -6,7 +6,6 @@ import de.hftl.user.*
 participant Lock identified by lockId {
     o String lockId
     o String name
-    o DateTime[] unlockLog
 	o LockState state
 	--> Vendor vendor
 }
@@ -18,8 +17,7 @@ enum LockState {
 
 asset LockKey identified by keyId {
     o String keyId
-    o DateTime expirationDate
-    o DateTime[] useLog
+    o DateTime expirationDate optional
     --> Lock lock
     --> User owner
     --> User issuer
@@ -27,7 +25,7 @@ asset LockKey identified by keyId {
 
 //Actions
 transaction Unlock {
-    --> LockKey lockKey
+    --> LockKey key
     --> Lock lock
 }
 

@@ -7,5 +7,19 @@ participant Vendor identified by vendorId {
     --> Lock[] locks
 }
 
-transaction ResetLock {}
-transaction RemoveLock {}
+transaction ResetLock {
+
+}
+
+transaction RemoveLock {
+
+}
+
+transaction registerLock {
+    --> Lock lock
+    --> Vendor vendor
+}
+
+transaction InitializeNetwork {
+
+}

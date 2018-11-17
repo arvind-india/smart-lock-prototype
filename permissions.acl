@@ -1,9 +1,9 @@
 rule SystemACL {
-  description:  "System ACL to permit all access"
-  participant: "org.hyperledger.composer.system.Participant"
-  operation: ALL
-  resource: "org.hyperledger.composer.system.**"
-  action: ALLOW
+    description:  "System ACL to permit all access"
+    participant: "org.hyperledger.composer.system.Participant"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
 }
 
 
@@ -37,7 +37,7 @@ rule OwnerCanGrantUnlockPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.GrantUnlock"
-    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
+    condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
 
@@ -63,7 +63,7 @@ rule OwnerCanRevokeUnlockPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.RevokeUnlock"
-    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
+    condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
 
@@ -89,7 +89,7 @@ rule OwnerCanGrantUseradminPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.GrantUseradmin"
-    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
+    condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
 
@@ -115,7 +115,7 @@ rule OwnerCanRevokeUseradminPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.RevokeUseradmin"
-    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
+    condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
 
@@ -147,11 +147,11 @@ rule OwnersCanUpdateTheLock {
     participant(u): "de.hftl.user.User"
     operation: ALL
     resource(l): "de.hftl.lock.Lock"
-    condition: (u.role == UserRole.OWNER)
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
-rule AnyoneCanSeeTheLock {
+rule AnyoneCanSeeTheLocks {
     description: "any participant can see the lock"
     participant: "de.hftl.**"
     operation: READ
@@ -166,9 +166,9 @@ rule KeyHoldersCanUpdateTheLockUnlock {
     resource(l): "de.hftl.lock.Lock"
     transaction(tx): "de.hftl.lock.Unlock"
     condition: (
-        tx.lockKey.lock.lockId == tx.lock.lockId
-        && tx.lock.lockid == l.lockId
-        && l.state == LockState.LOCKED
+        tx.lockKey.lock.getIdentifier() == tx.lock.getIdentifier()
+        && tx.lock.getIdentifier() == l.getIdentifier()
+        && l.state == "LOCKED"
         && u.keys.some(function (lockKey) {
             return lockKey.lock.getIdentifier() === l.getIdentifier();
         })
@@ -184,13 +184,172 @@ rule AnyUserCanCloseTheLock {
     transaction(tx): "de.hftl.lock.CloseLock"
     condition: (
         tx.lock.getIdentifier() == l.getIdentifier()
-        && l.state == LockState.UNLOCKED
+        && l.state == "UNLOCKED"
     )
     action: ALLOW
 }
 
+rule DenyLockModifications {
+    description: "no one can modify the lock"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.lock.Lock"
+    action: DENY
+}
+
 // Asset: LockKey
+rule OwnerCanIssueLockKey {
+    description: "owners can issue lock keys to users"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource(k): "de.hftl.lock.LockKey"
+    transaction(tx): "de.hftl.permissions.GrantUnlock"
+    condition: (
+        u.UserRole == "OWNER"
+    )
+    action: ALLOW
+}
+
+rule AnyoneCanSeeTheKeys {
+    description: "any participant can see all keys"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.lock.LockKey"
+    action: ALLOW
+}
+
+rule DenyKeyModifications {
+    description: "no one can modify or delete keys"
+    participant: "de.hftl.**"
+    operation: CREATE,UPDATE, DELETE
+    resource: "de.hftl.lock.LockKey"
+    action: DENY
+}
 
 // Transaction: Unlock
+rule AnyUserCanSubmitUnlockTransactions {
+    description: "any user in the network can submit an unlock transaction"
+    participant: "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.lock.Unlock"
+    action: ALLOW
+}
+
+rule AnyoneCanSeeUnlockTransactions {
+    description: "any participant in the network can see unlock transactions"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.lock.Unlock"
+    action: ALLOW
+}
+
+rule DenyUnlockTransactionModifications {
+    description: "no one can modify or delete unlock transactions"
+    participant: "de.hftl.**"
+    operation: UPDATE,DELETE
+    resource: "de.hftl.lock.Unlock"
+    action: DENY
+}
 
 // Tansaction: Lock
+rule AnyUserCanSubmitCloseLockTransactions {
+    description: "any user in the network can submit a closeLock transaction"
+    participant: "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.lock.CloseLock"
+    action: ALLOW
+}
+
+rule LockCanLockItself {
+    description: "a lock can submit a lock transaction on itself"
+    participant(l): "de.hftl.lock.Lock"
+    operation: CREATE
+    resource(cl): "de.hftl.lock.CloseLock"
+    condition: (l.getIdentifier() == cl.lock.getIdentifier())
+    action: ALLOW
+}
+
+rule AnyoneCanSeeCloselockTransactions {
+    description: "any participant in the network can see CloseLock transactions"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.lock.CloseLock"
+    action: ALLOW
+}
+
+rule DenyCloseLockTransactionModifications {
+    description: "no one can modify or delete CloseLock transactions"
+    participant: "de.hftl.**"
+    operation: CREATE,UPDATE,DELETE
+    resource: "de.hftl.lock.CloseLock"
+    action: DENY
+}
+
+/*******************************************************************************************/
+
+/*
+ * Model: User
+ */
+
+// Participant: User
+rule VendorCanCreateAnInitialUser {
+    description: "a vendor can create an initial user"
+    participant: "de.hftl.vendor.Vendor"
+    operation: CREATE
+    resource: "de.hftl.user.User"
+    transaction: "de.hftl.vendor.InitializeNetwork"
+    action: ALLOW
+}
+
+rule AUserCanUpdateItself {
+    description: "a user can update itself"
+    participant(u): "de.hftl.user.User"
+    operation: UPDATE
+    resource(r): "de.hftl.user.User"
+    condition: (u.getIdentifier() == r.getIdentifier())
+    action: ALLOW
+}
+
+rule AnyoneCanSeeTheUsers {
+    description: "anyone can see all users"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.user.User"
+    action: ALLOW
+}
+
+rule OwnerCanAddAndModifyUsers {
+    description: "an owner can add and modify users"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE,UPDATE
+    resource: "de.hftl.user.User"
+    condition: (u.UserRole == "OWNER")
+    action: ALLOW
+}
+
+rule DenyUserModifications {
+    description: "no one can modify or delete users"
+    participant: "de.hftl.**"
+    operation: CREATE,UPDATE,DELETE
+    resource: "de.hftl.user.User"
+    action: DENY
+}
+
+/*******************************************************************************************/
+
+/*
+ * Model: Admin
+ */
+
+// Transaction: AddUser
+// Transaction: RemoveUser
+
+
+/*******************************************************************************************/
+
+/*
+ * Model: Vendor
+ */
+
+// Participant: Vendor
+// Transaction: ResetLock
