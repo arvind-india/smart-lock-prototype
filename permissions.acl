@@ -24,7 +24,14 @@ rule NetworkAdminSystem {
     action: ALLOW
 }
 
-// Transaction Unlock
+/*******************************************************************************************/
+/*******************************************************************************************/
+
+/*
+ * Model: Permissions
+ */
+
+ // Transaction: GrantUnlock
 rule OwnerCanGrantUnlockPermission {
   	description: "Only an owner can grant unlocks to other users"
     participant(u): "de.hftl.user.User"
@@ -34,11 +41,156 @@ rule OwnerCanGrantUnlockPermission {
     action: ALLOW
 }
 
+rule AnyoneCanSeeGrantUnlockPermission {
+  	description: "Anyone can see the GrantUnlock Transaction"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.permissions.GrantUnlock"
+    action: ALLOW
+}
+
 rule DenyGrantUnlockPermission {
   	description: "Deny the right to grant unlocks to everyone else"
-    participant(u): "de.hftl.**"
+    participant: "de.hftl.**"
     operation: ALL
     resource: "de.hftl.permissions.GrantUnlock"
-    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
     action: DENY
 }
+
+// Transaction: RevokeUnlock
+rule OwnerCanRevokeUnlockPermission {
+  	description: "Only an owner can revoke unlocks to other users"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.permissions.RevokeUnlock"
+    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
+    action: ALLOW
+}
+
+rule AnyoneCanSeeRevokeUnlockPermission {
+  	description: "Anyone can see the RevokeUnlock Transaction"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.permissions.RevokeUnlock"
+    action: ALLOW
+}
+
+rule DenyRevokeUnlockPermission {
+  	description: "Deny the right to grant unlocks to everyone else"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.permissions.RevokeUnlock"
+    action: DENY
+}
+
+// Transaction: GrantAdmin
+rule OwnerCanGrantUseradminPermission {
+  	description: "Only an owner can grant the user admin permission to other users"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.permissions.GrantUseradmin"
+    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
+    action: ALLOW
+}
+
+rule AnyoneCanSeeGrantUserdminPermission {
+  	description: "Anyone can see the GrantUseradmin Transaction"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.permissions.GrantUseradmin"
+    action: ALLOW
+}
+
+rule DenyGrantUseradminPermission {
+  	description: "Deny the right to grant the user admin permission to everyone else"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.permissions.GrantUseradmin"
+    action: DENY
+}
+
+// Transaction: RevokeAdmin
+rule OwnerCanRevokeUseradminPermission {
+  	description: "Only an owner can revoke the user admin permission to other users"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.permissions.RevokeUseradmin"
+    condition: (u.UserRole == de.hftl.user.UserRole.OWNER)
+    action: ALLOW
+}
+
+rule AnyoneCanSeeRevokeUseradminPermission {
+  	description: "Anyone can see the RevokeUseradmin Transaction"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.permissions.RevokeUseradmin"
+    action: ALLOW
+}
+
+rule DenyRevokeUseradminPermission {
+  	description: "Deny the right to revoke the user admin permission to everyone else"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.permissions.RevokeUseradmin"
+    action: DENY
+}
+
+/*******************************************************************************************/
+
+/*
+ * Model: Lock
+ */
+
+ // Participant: Lock
+rule OwnersCanUpdateTheLock {
+    description: "owners can create, read, update and delete the lock"
+    participant(u): "de.hftl.user.User"
+    operation: ALL
+    resource(l): "de.hftl.lock.Lock"
+    condition: (u.role == UserRole.OWNER)
+    action: ALLOW
+}
+
+rule AnyoneCanSeeTheLock {
+    description: "any participant can see the lock"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.lock.Lock"
+    action: ALLOW
+}
+
+rule KeyHoldersCanUpdateTheLockUnlock {
+  	description: "Only key holders can update the lock state to open while unlocking"
+    participant(u): "de.hftl.user.User"
+    operation: UPDATE
+    resource(l): "de.hftl.lock.Lock"
+    transaction(tx): "de.hftl.lock.Unlock"
+    condition: (
+        tx.lockKey.lock.lockId == tx.lock.lockId
+        && tx.lock.lockid == l.lockId
+        && l.state == LockState.LOCKED
+        && u.keys.some(function (lockKey) {
+            return lockKey.lock.getIdentifier() === l.getIdentifier();
+        })
+    )
+    action: ALLOW
+}
+
+rule AnyUserCanCloseTheLock {
+  	description: "Any user can close the lock if it is open"
+    participant: "de.hftl.user.User"
+    operation: UPDATE
+    resource(l): "de.hftl.lock.Lock"
+    transaction(tx): "de.hftl.lock.CloseLock"
+    condition: (
+        tx.lock.getIdentifier() == l.getIdentifier()
+        && l.state == LockState.UNLOCKED
+    )
+    action: ALLOW
+}
+
+// Asset: LockKey
+
+// Transaction: Unlock
+
+// Tansaction: Lock

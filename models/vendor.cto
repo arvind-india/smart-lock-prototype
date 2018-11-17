@@ -1,15 +1,11 @@
 namespace de.hftl.vendor
 
-participant Vendor identified by vendorServerId {
-	o String vendorServerId
-	o DateTime lastUpdate
-	o Version version
+import de.hftl.lock.*
+
+participant Vendor identified by vendorId {
+	o String vendorId
+    --> Lock[] locks
 }
 
-concept Version {
-	o String version
-}
-
-transaction UpdateFirmware {}
-transaction UpdateNetwork {}
 transaction ResetLock {}
+transaction RemoveLock {}

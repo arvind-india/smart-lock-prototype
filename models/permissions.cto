@@ -16,12 +16,12 @@ transaction RevokeUnlock {
     --> User revokee
 }
 
-transaction GrantAdmin {
+transaction GrantUseradmin {
     --> User issuer
     --> User grantee
 }
 
-transaction RevokeAdmin {
+transaction RevokeUseradmin {
     --> User issuer
     --> User revokee
 }

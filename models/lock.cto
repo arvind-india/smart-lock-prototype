@@ -1,4 +1,5 @@
 namespace de.hftl.lock
+
 import de.hftl.vendor.*
 import de.hftl.user.*
 
@@ -7,13 +8,12 @@ participant Lock identified by lockId {
     o String name
     o DateTime[] unlockLog
 	o LockState state
-	o Version Version
-	--> Vendor vendorId
+	--> Vendor vendor
 }
 
 enum LockState {
-  o UNLOCKED
-  o LOCKED
+    o UNLOCKED
+    o LOCKED
 }
 
 asset LockKey identified by keyId {
@@ -28,5 +28,9 @@ asset LockKey identified by keyId {
 //Actions
 transaction Unlock {
     --> LockKey lockKey
+    --> Lock lock
+}
+
+transaction CloseLock {
     --> Lock lock
 }
