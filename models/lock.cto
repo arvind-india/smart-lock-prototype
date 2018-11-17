@@ -3,10 +3,12 @@ namespace de.hftl.lock
 import de.hftl.vendor.*
 import de.hftl.user.*
 
+
 participant Lock identified by lockId {
     o String lockId
     o String name
 	o LockState state
+    --> LockKey[] keyInUse
 	--> Vendor vendor
 }
 

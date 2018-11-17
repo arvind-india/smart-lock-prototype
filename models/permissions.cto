@@ -1,25 +1,28 @@
 namespace de.hftl.permissions
+
 import de.hftl.lock.*
 import de.hftl.user.*
 
+
 transaction GrantUnlock {
-    --> Lock lock //Lock on which the key can be used
+    --> Lock lock // Lock on which the key can be used
+    o DateTime expirationDate optional
     --> User issuer
     --> User grantee
 }
 
 transaction RevokeUnlock {
-    --> Lock lock //Lock on which the key can be used
+    --> LockKey lockKey // key to remove
     --> User issuer
     --> User revokee
 }
 
-transaction GrantUseradmin {
+transaction GrantOwner {
     --> User issuer
     --> User grantee
 }
 
-transaction RevokeUseradmin {
+transaction RevokeOwner {
     --> User issuer
     --> User revokee
 }

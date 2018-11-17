@@ -86,54 +86,54 @@ rule DenyRevokeUnlockPermission {
 }
 
 // Transaction: GrantAdmin
-rule OwnerCanGrantUseradminPermission {
+rule OwnerCanGrantOwnerPermission {
   	description: "Only an owner can grant the user admin permission to other users"
     participant(u): "de.hftl.user.User"
     operation: CREATE
-    resource: "de.hftl.permissions.GrantUseradmin"
+    resource: "de.hftl.permissions.GrantOwner"
     condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
 
 rule AnyoneCanSeeGrantUserdminPermission {
-  	description: "Anyone can see the GrantUseradmin Transaction"
+  	description: "Anyone can see the GrantOwner Transaction"
     participant: "de.hftl.**"
     operation: READ
-    resource: "de.hftl.permissions.GrantUseradmin"
+    resource: "de.hftl.permissions.GrantOwner"
     action: ALLOW
 }
 
-rule DenyGrantUseradminPermission {
+rule DenyGrantOwnerPermission {
   	description: "Deny the right to grant the user admin permission to everyone else"
     participant: "de.hftl.**"
     operation: ALL
-    resource: "de.hftl.permissions.GrantUseradmin"
+    resource: "de.hftl.permissions.GrantOwner"
     action: DENY
 }
 
 // Transaction: RevokeAdmin
-rule OwnerCanRevokeUseradminPermission {
+rule OwnerCanRevokeOwnerPermission {
   	description: "Only an owner can revoke the user admin permission to other users"
     participant(u): "de.hftl.user.User"
     operation: CREATE
-    resource: "de.hftl.permissions.RevokeUseradmin"
+    resource: "de.hftl.permissions.RevokeOwner"
     condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
 
-rule AnyoneCanSeeRevokeUseradminPermission {
-  	description: "Anyone can see the RevokeUseradmin Transaction"
+rule AnyoneCanSeeRevokeOwnerPermission {
+  	description: "Anyone can see the RevokeOwner Transaction"
     participant: "de.hftl.**"
     operation: READ
-    resource: "de.hftl.permissions.RevokeUseradmin"
+    resource: "de.hftl.permissions.RevokeOwner"
     action: ALLOW
 }
 
-rule DenyRevokeUseradminPermission {
+rule DenyRevokeOwnerPermission {
   	description: "Deny the right to revoke the user admin permission to everyone else"
     participant: "de.hftl.**"
     operation: ALL
-    resource: "de.hftl.permissions.RevokeUseradmin"
+    resource: "de.hftl.permissions.RevokeOwner"
     action: DENY
 }
 
@@ -320,22 +320,11 @@ rule AnyoneCanSeeTheUsers {
     action: ALLOW
 }
 
-rule OwnerCanAddUser {
-    description: "an owner can add user"
+rule OwnerCanAlterUser {
+    description: "an owner can alter user"
     participant(u): "de.hftl.user.User"
-    operation: CREATE
+    operation: ALL
     resource: "de.hftl.user.User"
-    transaction: "de.hftl.admin.AddUser"
-    condition: (u.UserRole == "OWNER")
-    action: ALLOW
-}
-
-rule OwnerCanRemoveUser {
-    description: "an owner can remove users"
-    participant(u): "de.hftl.user.User"
-    operation: DELETE
-    resource: "de.hftl.user.User"
-    transaction: "de.hftl.admin.RemoveUser"
     condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
@@ -345,72 +334,6 @@ rule DenyUserModifications {
     participant: "de.hftl.**"
     operation: CREATE,UPDATE,DELETE
     resource: "de.hftl.user.User"
-    action: DENY
-}
-
-/*******************************************************************************************/
-
-/*
- * Model: Admin
- */
-
-// Transaction: AddUser
-rule OwnerCanAddUserTransaction {
-    description: "an owner can add a user"
-    participant(u): "de.hftl.user.User"
-    operation: CREATE
-    resource: "de.hftl.admin.AddUser"
-    condition: (u.UserRole == "OWNER")
-    action: ALLOW
-}
-
-rule VendorCanAddUserTransaction {
-    description: "an vendor can add a user"
-    participant: "de.hftl.vendor.Vendor"
-    operation: CREATE
-    resource: "de.hftl.admin.AddUser"
-    action: ALLOW
-}
-
-rule AnyoneCanSeeAddUserTransactions {
-    description: "anyone can see addUser transactions"
-    participant: "de.hftl.**"
-    operation: READ
-    resource: "de.hftl.admin.AddUser"
-    action: ALLOW
-}
-
-rule DenyAddUserTransactions {
-    description: "no one can modify adduser transactions"
-    participant: "de.hftl.**"
-    operation: ALL
-    resource: "de.hftl.admin.AddUser"
-    action: DENY
-}
-
-// Transaction: RemoveUser
-rule OwnerCanRemoveUserTransaction {
-    description: "an owner can remove a user"
-    participant(u): "de.hftl.user.User"
-    operation: CREATE
-    resource: "de.hftl.admin.RemoveUser"
-    condition: (u.UserRole == "OWNER")
-    action: ALLOW
-}
-
-rule AnyoneCanSeeRemoveUserTransactions {
-    description: "anyone can see RemoveUser transactions"
-    participant: "de.hftl.**"
-    operation: READ
-    resource: "de.hftl.admin.RemoveUser"
-    action: ALLOW
-}
-
-rule DenyRemoveUserTransactions {
-    description: "no one can modify removeuser transactions"
-    participant: "de.hftl.**"
-    operation: ALL
-    resource: "de.hftl.admin.AddUser"
     action: DENY
 }
 

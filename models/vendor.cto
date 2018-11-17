@@ -2,6 +2,7 @@ namespace de.hftl.vendor
 
 import de.hftl.lock.*
 
+
 participant Vendor identified by vendorId {
 	o String vendorId
     --> Lock[] locks

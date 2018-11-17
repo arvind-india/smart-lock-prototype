@@ -3,6 +3,7 @@ namespace de.hftl.user
 import de.hftl.lock.*
 import de.hftl.vendor.Vendor
 
+
 participant User identified by userId {
     o String userId
     o String firstName
