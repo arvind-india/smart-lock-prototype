@@ -8,14 +8,14 @@ participant Vendor identified by vendorId {
 }
 
 transaction ResetLock {
-
+    --> Lock lock
 }
 
 transaction RemoveLock {
-
+    --> Lock lock
 }
 
-transaction registerLock {
+transaction RegisterLock {
     --> Lock lock
     --> Vendor vendor
 }

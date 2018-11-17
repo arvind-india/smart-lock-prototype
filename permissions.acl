@@ -1,14 +1,15 @@
-rule SystemACL {
+
+/*rule SystemACL {
     description:  "System ACL to permit all access"
     participant: "org.hyperledger.composer.system.Participant"
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
-}
+}*/
 
 
 // admin stuff
-rule NetworkAdminUser {
+/*rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
     operation: ALL
@@ -22,7 +23,9 @@ rule NetworkAdminSystem {
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
-}
+}*/
+
+
 
 /*******************************************************************************************/
 /*******************************************************************************************/
@@ -318,11 +321,22 @@ rule AnyoneCanSeeTheUsers {
     action: ALLOW
 }
 
-rule OwnerCanAddAndModifyUsers {
-    description: "an owner can add and modify users"
+rule OwnerCanAddUser {
+    description: "an owner can add user"
     participant(u): "de.hftl.user.User"
-    operation: CREATE,UPDATE
+    operation: CREATE
     resource: "de.hftl.user.User"
+    transaction: "de.hftl.admin.AddUser"
+    condition: (u.UserRole == "OWNER")
+    action: ALLOW
+}
+
+rule OwnerCanRemoveUser {
+    description: "an owner can remove users"
+    participant(u): "de.hftl.user.User"
+    operation: DELETE
+    resource: "de.hftl.user.User"
+    transaction: "de.hftl.admin.RemoveUser"
     condition: (u.UserRole == "OWNER")
     action: ALLOW
 }
@@ -342,7 +356,64 @@ rule DenyUserModifications {
  */
 
 // Transaction: AddUser
+rule OwnerCanAddUserTransaction {
+    description: "an owner can add a user"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.admin.AddUser"
+    condition: (u.UserRole == "OWNER")
+    action: ALLOW
+}
+
+rule VendorCanAddUserTransaction {
+    description: "an vendor can add a user"
+    participant: "de.hftl.vendor.Vendor"
+    operation: CREATE
+    resource: "de.hftl.admin.AddUser"
+    action: ALLOW
+}
+
+rule AnyoneCanSeeAddUserTransactions {
+    description: "anyone can see addUser transactions"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.admin.AddUser"
+    action: ALLOW
+}
+
+rule DenyAddUserTransactions {
+    description: "no one can modify adduser transactions"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.admin.AddUser"
+    action: DENY
+}
+
 // Transaction: RemoveUser
+rule OwnerCanRemoveUserTransaction {
+    description: "an owner can remove a user"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.admin.RemoveUser"
+    condition: (u.UserRole == "OWNER")
+    action: ALLOW
+}
+
+rule AnyoneCanSeeRemoveUserTransactions {
+    description: "anyone can see RemoveUser transactions"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.admin.RemoveUser"
+    action: ALLOW
+}
+
+rule DenyRemoveUserTransactions {
+    description: "no one can modify removeuser transactions"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.admin.AddUser"
+    action: DENY
+}
 
 
 /*******************************************************************************************/
@@ -352,4 +423,122 @@ rule DenyUserModifications {
  */
 
 // Participant: Vendor
+rule AnyoneCanSeeTheVendor {
+    description: "anyone can see the vendor"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.vendor.Vendor"
+    action: ALLOW
+}
+
+rule NetworkAdminCanCreateAVendor {
+    description: "a network admin can administrate a vendor"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "de.hftl.vendor.Vendor"
+    action: ALLOW
+}
+
+rule DenyVendorModifications {
+    description: "no one can modify a vendor"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.vendor.Vendor"
+    action: DENY
+}
+
+// Transaction: RegisterLock
+rule OwnerCanRegisterLock {
+    description: "an owner can register a lock"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.vendor.RegisterLock"
+    condition: (u.UserRole == "OWNER")
+    action: ALLOW
+}
+
+rule AnyoneCanSeeRegisterLockTransactions {
+    description: "anyone can see RegisterLock transactions"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.vendor.RegisterLock"
+    action: ALLOW
+}
+
+rule DenyRegisterLockTransactions {
+    description: "no one can modify registerlock transactions"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.vendor.RegisterLock"
+    action: DENY
+}
+
+
 // Transaction: ResetLock
+rule OwnerCanResetLock {
+    description: "an owner can reset a lock"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.vendor.ResetLock"
+    condition: (u.UserRole == "OWNER")
+    action: ALLOW
+}
+
+rule AnyoneCanSeeResetLockTransactions {
+    description: "anyone can see RegsetLock transactions"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.vendor.ResetLock"
+    action: ALLOW
+}
+
+rule DenyResetLockTransactions {
+    description: "no one can modify ResetLock transactions"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.vendor.ResetLock"
+    action: DENY
+}
+
+// Transaction: RemoveLock
+rule OwnerCanRemoveLock {
+    description: "an owner can remove a lock"
+    participant(u): "de.hftl.user.User"
+    operation: CREATE
+    resource: "de.hftl.vendor.RemoveLock"
+    condition: (u.UserRole == "OWNER")
+    action: ALLOW
+}
+
+rule AnyoneCanSeeRemoveLockTransactions {
+    description: "anyone can see RemoveLock transactions"
+    participant: "de.hftl.**"
+    operation: READ
+    resource: "de.hftl.vendor.RemoveLock"
+    action: ALLOW
+}
+
+rule DenyRemoveLockTransactions {
+    description: "no one can modify RemoveLock transactions"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.vendor.RemoveLock"
+    action: DENY
+}
+
+// Transaction: InitializeNetwork
+rule VendorCanInitializeNetwork {
+    description: "a vendort can initialize a network"
+    participant: "de.hftl.vendor.Vendor"
+    operation: CREATE
+    resource: "de.hftl.vendor.InitializeNetwork"
+    action: ALLOW
+}
+
+rule DenyInitializeNetworkTransactions {
+    description: "no one can CRUD InitializeNetworkTransactions"
+    participant: "de.hftl.**"
+    operation: ALL
+    resource: "de.hftl.vendor.InitializeNetwork"
+    action: DENY
+}
