@@ -27,7 +27,6 @@ asset LockKey identified by keyId {
 
 //Actions
 transaction Unlock {
-    --> LockKey key
     --> Lock lock
 }
 

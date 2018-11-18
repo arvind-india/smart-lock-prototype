@@ -1,10 +1,10 @@
-/*rule SystemACL {
+rule SystemACL {
     description:  "System ACL to permit all access"
     participant: "org.hyperledger.composer.system.Participant"
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
-}*/
+}
 
 
 // admin stuff
@@ -212,6 +212,18 @@ rule OwnerCanIssueLockKey {
     action: ALLOW
 }
 
+rule OwnerCanDeleteLockKey {
+    description: "owners can delete lock keys"
+    participant(u): "de.hftl.user.User"
+    operation: DELETE
+    resource(k): "de.hftl.lock.LockKey"
+    transaction(tx): "de.hftl.permissions.RevokeUnlock"
+    condition: (
+        u.role == "OWNER"
+    )
+    action: ALLOW
+}
+
 rule AnyoneCanSeeTheKeys {
     description: "any participant can see all keys"
     participant: "de.hftl.**"
@@ -350,6 +362,15 @@ rule AnyoneCanSeeTheVendor {
     participant: "de.hftl.**"
     operation: READ
     resource: "de.hftl.vendor.Vendor"
+    action: ALLOW
+}
+
+rule OwnerCanUpdateVenodorDuringTx {
+    description: "an owner can update a vendor's locks when registering a lock"
+    participant: "de.hftl.user.User"
+    operation: UPDATE
+    resource: "de.hftl.vendor.Vendor"
+    transaction: "de.hftl.vendor.RegisterLock"
     action: ALLOW
 }
 

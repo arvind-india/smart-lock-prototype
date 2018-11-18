@@ -11,7 +11,7 @@ transaction GrantUnlock {
 }
 
 transaction RevokeUnlock {
-    --> LockKey lockKey
+    --> Lock lock
     --> User revokee
 }
 
