@@ -39,7 +39,7 @@ rule OwnerCanGrantUnlockPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.GrantUnlock"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
@@ -65,7 +65,7 @@ rule OwnerCanRevokeUnlockPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.RevokeUnlock"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
@@ -91,7 +91,7 @@ rule OwnerCanGrantOwnerPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.GrantOwner"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
@@ -117,7 +117,7 @@ rule OwnerCanRevokeOwnerPermission {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.RevokeOwner"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
@@ -207,7 +207,7 @@ rule OwnerCanIssueLockKey {
     resource(k): "de.hftl.lock.LockKey"
     transaction(tx): "de.hftl.permissions.GrantUnlock"
     condition: (
-        u.UserRole == "OWNER"
+        u.role == "OWNER"
     )
     action: ALLOW
 }
@@ -325,7 +325,7 @@ rule OwnerCanAlterUser {
     participant(u): "de.hftl.user.User"
     operation: ALL
     resource: "de.hftl.user.User"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
@@ -375,7 +375,7 @@ rule OwnerCanRegisterLock {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.vendor.RegisterLock"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
@@ -402,7 +402,7 @@ rule OwnerCanResetLock {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.vendor.ResetLock"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
@@ -428,7 +428,7 @@ rule OwnerCanRemoveLock {
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.vendor.RemoveLock"
-    condition: (u.UserRole == "OWNER")
+    condition: (u.role == "OWNER")
     action: ALLOW
 }
 
