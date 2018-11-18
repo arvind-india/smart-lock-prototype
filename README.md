@@ -1,3 +1,24 @@
-# prototype-smart-lock
+# Prototype Smart Lock
 
-Prototype for a smart lock blockchain network.
+Prototype for a smart lock blockchain network with minimal functions.
+
+## Implemented Functions
+1. Add/Remove users
+2. etc.
+
+## Usage
+1. Download the latest [release](https://github.com/qn0x/smart-lock-prototype/releases) (``.bna`` file)
+2. Go to [The Official Playground](https://composer-playground.mybluemix.net/) website
+3. Select "Deploy a new business network"
+4. Choose name, description and create an admin card
+5. For the starting template choose "Upload or drop" a network and upload the file downloaded in step 1
+6. 
+
+## Setting Up A Network
+1. Add a new vendor
+2. 
+
+## Functional Restrictions
+
+## Known Issues
+- IDs are not secure. They are only pseudo-randomly generated.

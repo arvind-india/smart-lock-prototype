@@ -35,7 +35,7 @@ rule NetworkAdminSystem {
 
  // Transaction: GrantUnlock
 rule OwnerCanGrantUnlockPermission {
-  	description: "Only an owner can grant unlocks to other users"
+    description: "Only an owner can grant unlocks to other users"
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.GrantUnlock"
@@ -44,7 +44,7 @@ rule OwnerCanGrantUnlockPermission {
 }
 
 rule AnyoneCanSeeGrantUnlockPermission {
-  	description: "Anyone can see the GrantUnlock Transaction"
+    description: "Anyone can see the GrantUnlock Transaction"
     participant: "de.hftl.**"
     operation: READ
     resource: "de.hftl.permissions.GrantUnlock"
@@ -52,7 +52,7 @@ rule AnyoneCanSeeGrantUnlockPermission {
 }
 
 rule DenyGrantUnlockPermission {
-  	description: "Deny the right to grant unlocks to everyone else"
+    description: "Deny the right to grant unlocks to everyone else"
     participant: "de.hftl.**"
     operation: ALL
     resource: "de.hftl.permissions.GrantUnlock"
@@ -61,7 +61,7 @@ rule DenyGrantUnlockPermission {
 
 // Transaction: RevokeUnlock
 rule OwnerCanRevokeUnlockPermission {
-  	description: "Only an owner can revoke unlocks to other users"
+    description: "Only an owner can revoke unlocks to other users"
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.RevokeUnlock"
@@ -70,7 +70,7 @@ rule OwnerCanRevokeUnlockPermission {
 }
 
 rule AnyoneCanSeeRevokeUnlockPermission {
-  	description: "Anyone can see the RevokeUnlock Transaction"
+    description: "Anyone can see the RevokeUnlock Transaction"
     participant: "de.hftl.**"
     operation: READ
     resource: "de.hftl.permissions.RevokeUnlock"
@@ -78,7 +78,7 @@ rule AnyoneCanSeeRevokeUnlockPermission {
 }
 
 rule DenyRevokeUnlockPermission {
-  	description: "Deny the right to grant unlocks to everyone else"
+    description: "Deny the right to grant unlocks to everyone else"
     participant: "de.hftl.**"
     operation: ALL
     resource: "de.hftl.permissions.RevokeUnlock"
@@ -87,7 +87,7 @@ rule DenyRevokeUnlockPermission {
 
 // Transaction: GrantAdmin
 rule OwnerCanGrantOwnerPermission {
-  	description: "Only an owner can grant the user admin permission to other users"
+    description: "Only an owner can grant the user admin permission to other users"
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.GrantOwner"
@@ -96,7 +96,7 @@ rule OwnerCanGrantOwnerPermission {
 }
 
 rule AnyoneCanSeeGrantUserdminPermission {
-  	description: "Anyone can see the GrantOwner Transaction"
+    description: "Anyone can see the GrantOwner Transaction"
     participant: "de.hftl.**"
     operation: READ
     resource: "de.hftl.permissions.GrantOwner"
@@ -104,7 +104,7 @@ rule AnyoneCanSeeGrantUserdminPermission {
 }
 
 rule DenyGrantOwnerPermission {
-  	description: "Deny the right to grant the user admin permission to everyone else"
+    description: "Deny the right to grant the user admin permission to everyone else"
     participant: "de.hftl.**"
     operation: ALL
     resource: "de.hftl.permissions.GrantOwner"
@@ -113,7 +113,7 @@ rule DenyGrantOwnerPermission {
 
 // Transaction: RevokeAdmin
 rule OwnerCanRevokeOwnerPermission {
-  	description: "Only an owner can revoke the user admin permission to other users"
+    description: "Only an owner can revoke the user admin permission to other users"
     participant(u): "de.hftl.user.User"
     operation: CREATE
     resource: "de.hftl.permissions.RevokeOwner"
@@ -122,7 +122,7 @@ rule OwnerCanRevokeOwnerPermission {
 }
 
 rule AnyoneCanSeeRevokeOwnerPermission {
-  	description: "Anyone can see the RevokeOwner Transaction"
+    description: "Anyone can see the RevokeOwner Transaction"
     participant: "de.hftl.**"
     operation: READ
     resource: "de.hftl.permissions.RevokeOwner"
@@ -130,7 +130,7 @@ rule AnyoneCanSeeRevokeOwnerPermission {
 }
 
 rule DenyRevokeOwnerPermission {
-  	description: "Deny the right to revoke the user admin permission to everyone else"
+    description: "Deny the right to revoke the user admin permission to everyone else"
     participant: "de.hftl.**"
     operation: ALL
     resource: "de.hftl.permissions.RevokeOwner"
@@ -162,7 +162,7 @@ rule AnyoneCanSeeTheLocks {
 }
 
 rule KeyHoldersCanUpdateTheLockUnlock {
-  	description: "Only key holders can update the lock state to open while unlocking"
+    description: "Only key holders can update the lock state to open while unlocking"
     participant(u): "de.hftl.user.User"
     operation: UPDATE
     resource(l): "de.hftl.lock.Lock"
@@ -179,7 +179,7 @@ rule KeyHoldersCanUpdateTheLockUnlock {
 }
 
 rule AnyUserCanCloseTheLock {
-  	description: "Any user can close the lock if it is open"
+    description: "Any user can close the lock if it is open"
     participant: "de.hftl.user.User"
     operation: UPDATE
     resource(l): "de.hftl.lock.Lock"
@@ -321,7 +321,7 @@ rule AnyoneCanSeeTheUsers {
 }
 
 rule OwnerCanAlterUser {
-    description: "an owner can alter user"
+    description: "an owner can alter, add and remove users"
     participant(u): "de.hftl.user.User"
     operation: ALL
     resource: "de.hftl.user.User"
@@ -450,7 +450,7 @@ rule DenyRemoveLockTransactions {
 
 // Transaction: InitializeNetwork
 rule VendorCanInitializeNetwork {
-    description: "a vendort can initialize a network"
+    description: "a vendor can initialize a network"
     participant: "de.hftl.vendor.Vendor"
     operation: CREATE
     resource: "de.hftl.vendor.InitializeNetwork"

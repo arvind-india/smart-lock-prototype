@@ -8,7 +8,7 @@ participant User identified by userId {
     o String userId
     o String firstName
     o String lastName
-	o UserRole role
+    o UserRole role
     --> LockKey[] keys
     --> Vendor vendor
 }
