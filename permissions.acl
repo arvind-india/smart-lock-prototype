@@ -154,7 +154,7 @@ rule OwnersCanUpdateTheLock {
 }
 
 rule AnyoneCanSeeTheLocks {
-    description: "any participant can see the lock"
+    description: "anyone can see all locks"
     participant: "de.hftl.**"
     operation: READ
     resource: "de.hftl.lock.Lock"
@@ -162,7 +162,7 @@ rule AnyoneCanSeeTheLocks {
 }
 
 rule KeyHoldersCanUpdateTheLockUnlock {
-    description: "Only key holders can update the lock state to open while unlocking"
+    description: "key holders can update the lock while unlocking"
     participant(u): "de.hftl.user.User"
     operation: UPDATE
     resource(l): "de.hftl.lock.Lock"
