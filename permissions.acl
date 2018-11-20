@@ -485,3 +485,12 @@ rule DenyInitializeNetworkTransactions {
     resource: "de.hftl.vendor.InitializeNetwork"
     action: DENY
 }
+
+// Deny everything
+rule DenyAll {
+  description: "Deny all operations from all users in the network"
+  participant: "de.hftl.**"
+  operation: ALL
+  resource: "de.hftl.**"
+  action: DENY
+}
