@@ -1,10 +1,6 @@
 # Prototype Smart Lock
 
-Prototype for a smart lock blockchain network with minimal functions.
-
-## Implemented Functions
-1. Add/Remove users
-2. Initialize the nework
+Prototype of a smart lock blockchain network with minimal functionality.
 
 ## Usage
 ### Setup Blockchain Network
